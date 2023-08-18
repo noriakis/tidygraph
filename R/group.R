@@ -147,6 +147,29 @@ group_louvain <- function(weights = NULL) {
   group <- as.integer(membership(cluster_louvain(graph = .G(), weights = weights)))
   desc_enumeration(group)
 }
+#' @importFrom igraph membership cluster_leiden
+#' @export
+group_leiden <- function (objective_function = c("CPM", "modularity"), weights = NULL,
+          resolution_parameter = 1, beta = 0.01, initial_membership = NULL,
+          n_iteration = 2, vertex_weights = NULL)
+{
+    expect_nodes()
+    weights <- enquo(weights)
+    weights <- eval_tidy(weights, .E())
+    if (is.null(weights)) {
+        weights <- NA
+    }
+    group <- as.integer(membership(cluster_leiden(graph = .G(), 
+                                                  objective_function=objective_function,
+                                                  weights = weights,
+                                                  resolution_parameter = resolution_parameter,
+                                                  beta = beta,
+                                                  initial_membership = initial_membership,
+                                                  n_iteration = n_iteration,
+                                                  vertex_weights = vertex_weights
+                                                  )))
+    desc_enumeration(group)
+}
 #' @describeIn group_graph Group nodes by optimising the moldularity score using [igraph::cluster_optimal()]
 #' @importFrom igraph membership cluster_optimal
 #' @export
